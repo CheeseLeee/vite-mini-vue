@@ -1,11 +1,10 @@
 import './style.css'
-import {h} from './src/runningtime/renderer'
-import {createApp} from './src/runningtime/index'
-import {ref,reactive,computed} from './src/reactive/reactive'
-var rootDom = document.getElementById('app')
+import { h } from './src/runningtime/h'
+import { createApp } from './src/runningtime/index'
+import { ref, reactive, computed } from './src/reactive/reactive'
 const HelloWorld = {
-    setup() {
-
+    setup(props) {
+        console.log(props,'children-props')
     },
     render() {
         return h('p', {}, [
@@ -15,6 +14,8 @@ const HelloWorld = {
 }
 const APP = {
     setup(props, ctx) {
+        console.log('ctx',ctx)
+        props.name = '2'
         let count = ref(0)
         function handleClick() {
             count.value++
@@ -65,10 +66,12 @@ const APP = {
             h('button', {
                 onClick: proxy.changePay2
             }, 'changePay2'),
-            h(HelloWorld, {}, {}),
+            h(HelloWorld, {comUid:1}, {}),
+            h('p',{},`name:${proxy.name}`)
         ])
     }
 }
-const app = createApp(APP)
+const app = createApp(APP,{name:'vue'})
 console.log(app)
+app.component('HelloWorld',HelloWorld)
 app.mount('#app')

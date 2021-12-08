@@ -1,44 +1,29 @@
-
-
-
-import {isObject} from '../untils'
-export const h = (tag,props,children) => {
-    let vnode = {
-        tag,
-        props,
-        children
-    }
-    if(typeof tag === 'string'){
-        return vnode
-    }else if(isObject(tag)){                
-        return tag.render()
-    }    
-}
-
 export const mount = (vnode,container) => {
-    var el = vnode.el = document.createElement(vnode.tag)
-    if(vnode.props){
-        for(var k in vnode.props){
-            if(k.startsWith('on')){
-                var methodKey = k.toLowerCase().substring(2)
-                el.addEventListener(methodKey,vnode.props[k])
-            }else{
-                var value = vnode.props[k]
-                el.setAttribute(k,value)
+    if(typeof vnode.tag === 'string'){
+        var el = vnode.el = document.createElement(vnode.tag)
+        if(vnode.props){
+            for(var k in vnode.props){
+                if(k.startsWith('on')){
+                    var methodKey = k.toLowerCase().substring(2)
+                    el.addEventListener(methodKey,vnode.props[k])
+                }else{
+                    var value = vnode.props[k]
+                    el.setAttribute(k,value)
+                }
             }
+        }
+        if(vnode.children){
+            if(typeof vnode.children === 'string'){
+                el.textContent = vnode.children
+            }else{
+                vnode.children.forEach(element => {
+                    mount(element,el)
+                });
+            }
+        }
+        container.appendChild(el)
+    }   
 
-        }
-    }
-    if(vnode.children){
-        if(typeof vnode.children === 'string'){
-            el.textContent = vnode.children
-        }else{
-            vnode.children.forEach(element => {
-                mount(element,el)
-            });
-        }
-    }
-    container.appendChild(el)
 }
 
 export function patch(n1,n2){

@@ -1,11 +1,12 @@
 import {isObject} from '../untils'
 import {effect} from '../reactive/reactive'
 import {mount,patch} from '../runningtime/renderer'
-export function createApp(rootComponent){
-    processComponent(rootComponent)
+export function createApp(rootComponent,rootComponentProps){
+    processComponent(rootComponent,rootComponentProps)
     let proxy = rootComponent._instance.proxy
     //ctx.count = 1  ==> count = 2
     return {
+        childrenComponents:[],
         mount(selector){
             var container = document.querySelector(selector)
             let isMounted = false
@@ -21,22 +22,48 @@ export function createApp(rootComponent){
                     oldVnode = newVnode
                 }
             })
+        },
+        component(childComName,childComData){
+            this.childrenComponents.push(childComName)
+            registerComponent(childComData)
         }
     }
 }
-function processComponent(rootComponent){
+
+function registerComponent(childComData){
+    processComponent(childComData)
+    console.log(childComData)
+}
+
+function processComponent(rootComponent,rootComponentProps){
     let instance = {
-        props:{},
+        props:rootComponentProps || {},
         attrs:{},
         setupState:null,
-        proxy:null
+        proxy:null,
+        ctx:{
+            emit(){
+                console.log('emit')
+            },
+            props:rootComponentProps
+        }
     }
-    let setupResult = rootComponent.setup()
+    let propsHandler = {
+        get(target,key,reciver){
+            return Reflect.get(target,key,reciver)
+        },
+        set(target,key,value,reciver){
+            console.warn('修改失败,单向数据流中禁止修改传递的props')
+            return Reflect.set(target,key,Reflect.get(target,key,reciver),reciver)
+        }
+    }
+    let propsProxy = new Proxy(instance,propsHandler)
+    let setupResult = rootComponent.setup(propsProxy,instance.ctx)
     if(isObject(setupResult)){
         instance.setupState = setupResult
     }
-    let handler = {
-        get(target,key,reciver){
+    let handler = {        
+        get(target,key,reciver){            
             if(target.setupState[key]){
                 return Reflect.get(target.setupState,key)  
             }else{
@@ -44,6 +71,7 @@ function processComponent(rootComponent){
             }           
         },
         set(target,key,value,recier){
+            debugger
             if(target.setupState[key]){
                 return Reflect.set(target.setupState,key,value)
             }else{

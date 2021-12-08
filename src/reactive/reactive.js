@@ -1,5 +1,4 @@
 
-
 const targetMap = new WeakMap() 
 let activeEffect = null
 export function effect(eff){
