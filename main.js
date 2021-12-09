@@ -1,14 +1,33 @@
 import './style.css'
 import { h } from './src/runningtime/h'
-import { createApp } from './src/runningtime/index'
-import { ref, reactive, computed } from './src/reactive/reactive'
+import { createApp } from './src/runningtime/createApp'
+import { ref, reactive, computed } from './src/reactive/reactive' 
+
+const HelloMiniVue = {
+    setup(){
+        return {
+
+        }
+    },
+    component:{
+
+    },
+    render(){
+        return h('div',{},'mini-vue')   
+
+    }
+}
 const HelloWorld = {
     setup(props) {
-        console.log(props,'children-props')
+        console.log(props.comUid,'children-props')
+        return {}
     },
-    render() {
+    render(proxy) {
         return h('p', {}, [
-            h('h2', {}, '我是Hello-world组件')
+            h(HelloMiniVue,{},{}),
+            h('h2', {}, '我是Hello-world组件'),
+            //h('h2',{},`${proxy.comUid}`),
+            
         ])
     }
 }
@@ -74,4 +93,5 @@ const APP = {
 const app = createApp(APP,{name:'vue'})
 console.log(app)
 app.component('HelloWorld',HelloWorld)
+app.component('HelloMiniVue',HelloMiniVue)
 app.mount('#app')

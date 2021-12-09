@@ -15,14 +15,17 @@ export const mount = (vnode,container) => {
         if(vnode.children){
             if(typeof vnode.children === 'string'){
                 el.textContent = vnode.children
-            }else{
+            }else{                
                 vnode.children.forEach(element => {
+                    debugger
                     mount(element,el)
                 });
             }
         }
         container.appendChild(el)
-    }   
+    }else{
+        console.log(vnode,'obj-vnode')
+    }  
 
 }
 
