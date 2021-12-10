@@ -1,4 +1,4 @@
-export const mount = (vnode,container) => {
+export const mount = (vnode,container) => {   
     if(typeof vnode.tag === 'string'){
         var el = vnode.el = document.createElement(vnode.tag)
         if(vnode.props){
@@ -23,9 +23,11 @@ export const mount = (vnode,container) => {
             }
         }
         container.appendChild(el)
+
     }else{
         console.log(vnode,'obj-vnode')
     }  
+
 
 }
 
@@ -62,15 +64,17 @@ export function patch(n1,n2){
         const oldChildren = n1.children
         const newChildren = n2.children
         if(typeof newChildren === 'string'){
+            
             el.innerHTML = newChildren
-        }else{//5 - 3 = 2 
+        }else if(newChildren === null){
+
+        }else{
             const commonArr = Math.min(oldChildren.length,newChildren.length)
             for(var i = 0; i < commonArr ; i++){
                 patch(oldChildren[i],newChildren[i])
             }
             if(oldChildren.length > newChildren.length){
                 oldChildren.slice(commonArr).forEach(item => {
-
                     el.removeChild(item.el)
                 })              
             }

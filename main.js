@@ -1,6 +1,7 @@
 import './style.css'
 import { h } from './src/runningtime/h'
 import { createApp } from './src/runningtime/createApp'
+
 import { ref, reactive, computed } from './src/reactive/reactive' 
 
 const HelloMiniVue = {
@@ -21,16 +22,23 @@ const HelloWorld = {
     setup(props) {
         console.log(props.comUid,'children-props')
         return {}
+
+
+
     },
     render(proxy) {
         return h('p', {}, [
+
             h(HelloMiniVue,{},{}),
             h('h2', {}, '我是Hello-world组件'),
             //h('h2',{},`${proxy.comUid}`),
             
+
+            h('h2', {}, '我是Hello-mini-mue')
         ])
     }
 }
+
 const APP = {
     setup(props, ctx) {
         console.log('ctx',ctx)
@@ -85,7 +93,7 @@ const APP = {
             h('button', {
                 onClick: proxy.changePay2
             }, 'changePay2'),
-            h(HelloWorld, {comUid:1}, {}),
+            h(HelloWorld, {comUid:1}, null),
             h('p',{},`name:${proxy.name}`)
         ])
     }
