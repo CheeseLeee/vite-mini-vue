@@ -17,7 +17,7 @@ export const mount = (vnode,container) => {
                 el.textContent = vnode.children
             }else{                
                 vnode.children.forEach(element => {
-                    debugger
+                    
                     mount(element,el)
                 });
             }
@@ -27,8 +27,6 @@ export const mount = (vnode,container) => {
     }else{
         console.log(vnode,'obj-vnode')
     }  
-
-
 }
 
 export function patch(n1,n2){

@@ -13,35 +13,37 @@ const HelloMiniVue = {
     component:{
 
     },
-    render(){
-        return h('div',{},'mini-vue')   
+    render(proxy){
+        return  h('div',{},[
+            h('h2', {class:'colorGreen'}, '我是Hello-mini-mue'),
+            h('h2', {class:'colorGreen'}, 'props' + proxy.comUid)
+        ])
 
     }
 }
 const HelloWorld = {
-    setup(props) {
-        console.log(props.comUid,'children-props')
-        return {}
-
-
-
+    component:{
+        HelloMiniVue
     },
-    render(proxy) {
+    setup(props,ctx) {
+        let comUid = ref(2000)
+        function changeComuid(){
+            comUid.value++
+        }
+        return {comUid,changeComuid }
+    },
+    render(proxy) { 
         return h('p', {}, [
-
-            h(HelloMiniVue,{},{}),
-            h('h2', {}, '我是Hello-world组件'),
-            //h('h2',{},`${proxy.comUid}`),
-            
-
-            h('h2', {}, '我是Hello-mini-mue')
+            h(HelloMiniVue,{comUid:5},[]),          
+            h('button', {onClick:proxy.changeComuid}, '改变uid'),
+            h('h2',{},`props${proxy.comUid.value}`),
         ])
     }
 }
 
 const APP = {
     setup(props, ctx) {
-        console.log('ctx',ctx)
+        
         props.name = '2'
         let count = ref(0)
         function handleClick() {
@@ -101,5 +103,5 @@ const APP = {
 const app = createApp(APP,{name:'vue'})
 console.log(app)
 app.component('HelloWorld',HelloWorld)
-app.component('HelloMiniVue',HelloMiniVue)
+//app.component('HelloMiniVue',HelloMiniVue)
 app.mount('#app')
