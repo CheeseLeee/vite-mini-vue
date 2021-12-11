@@ -4,6 +4,59 @@ import { createApp } from './src/runningtime/createApp'
 
 import { ref, reactive, computed } from './src/reactive/reactive' 
 
+const ComAchildCom = {
+    name:'ComAchildCom',
+    setup(){
+        return {
+
+        }
+    },
+    component:{
+        c:2
+    },
+    render(proxy){
+        console.log(proxy.id,'id')
+        return  h('p',{class:'colorRed'},'我是全局组件A的子组件的子组件')
+        
+
+    }    
+}
+const ComAchild = {
+    setup(){
+        return {
+
+        }
+    },
+    component:{
+        ComAchildCom
+    },
+    render(proxy){
+        return  h('div',{class:'colorRed'},[
+            h('p',{},'全局组件A的子组件'),
+            h(ComAchildCom,{id:2},null),
+            //h(HelloWorld,{},null),   
+        ])
+        
+
+    }     
+}
+const GloblComA = {
+    setup(){
+        return {
+
+        }
+    },
+    component:{
+        ComAchild
+    },
+    render(proxy){
+        return  h('div',{class:'colorRed'},[
+            h('div',{},'全局组件A'),
+            h(ComAchild,{},null)
+        ])
+
+    }   
+}
 const HelloMiniVue = {
     setup(){
         return {
@@ -11,31 +64,37 @@ const HelloMiniVue = {
         }
     },
     component:{
-
+        b:2
     },
     render(proxy){
         return  h('div',{},[
             h('h2', {class:'colorGreen'}, '我是Hello-mini-mue'),
-            h('h2', {class:'colorGreen'}, 'props' + proxy.comUid)
+            h(ComAchildCom,{},null),
+
+            h('h2', {class:'colorGreen'}, 'props' + proxy.comUid),
+            //h(ComAchildCom,{},null)
         ])
 
     }
 }
 const HelloWorld = {
+    name:'helloworld',
     component:{
-        HelloMiniVue
+        //HelloMiniVue,
     },
     setup(props,ctx) {
         let comUid = ref(2000)
         function changeComuid(){
+            console.log('uid++')
             comUid.value++
         }
         return {comUid,changeComuid }
     },
     render(proxy) { 
         return h('p', {}, [
-            h(HelloMiniVue,{comUid:5},[]),          
-            h('button', {onClick:proxy.changeComuid}, '改变uid'),
+            h(HelloMiniVue,{comUid:5},[]),   
+            h(ComAchildCom,{},null),       
+            h('button', {onClick:proxy.changeComuid}, '我是hello组件改变uid'),
             h('h2',{},`props${proxy.comUid.value}`),
         ])
     }
@@ -84,6 +143,7 @@ const APP = {
             h('h2', {
                 class: 'colorGreen'
             }, `count:${proxy.count.value}`),
+            h(ComAchildCom,{},null),
             h('button', {
                 onClick: proxy.handleClick
             }, 'count++'),
@@ -95,6 +155,7 @@ const APP = {
             h('button', {
                 onClick: proxy.changePay2
             }, 'changePay2'),
+            h(GloblComA,{},null),
             h(HelloWorld, {comUid:1}, null),
             h('p',{},`name:${proxy.name}`)
         ])
@@ -103,5 +164,7 @@ const APP = {
 const app = createApp(APP,{name:'vue'})
 console.log(app)
 app.component('HelloWorld',HelloWorld)
-//app.component('HelloMiniVue',HelloMiniVue)
+app.component('HelloMiniVue',HelloMiniVue)
+app.component('GloblComA',GloblComA)
+
 app.mount('#app')

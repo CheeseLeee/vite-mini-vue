@@ -1,13 +1,16 @@
+import { effect } from '../reactive/reactive'
 import {
     isObject
 } from '../untils'
  '../runningtime/renderer'
-
+import {mount,patch} from './renderer'
 export function registerComponent(componentName, childComData) {
     //processComponent(childComData, undefined, componentName)
 }
+let uid = 0
+export function processComponent(rootComponent, rootComponentProps, componentName) {
 
-export function processComponent(rootComponent, rootComponentProps, componentName = 'root') {
+    let comid = uid++ 
     let instance = {
         name: componentName,
         children: [],
@@ -15,6 +18,7 @@ export function processComponent(rootComponent, rootComponentProps, componentNam
         attrs: {},
         setupState: null,
         proxy: null,
+        uid:comid,
         component(childComponent) {
 
         },
@@ -63,5 +67,4 @@ export function processComponent(rootComponent, rootComponentProps, componentNam
     }
     instance.proxy = new Proxy(instance, handler)
     rootComponent._instance = instance
-    console.log(rootComponent)
 }
