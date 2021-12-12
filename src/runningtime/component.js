@@ -50,7 +50,14 @@ export function processComponent(rootComponent, rootComponentProps, componentNam
         instance.setupState = setupResult
     }
     let handler = {
-        get(target, key, reciver) {          
+        get(target, key, reciver) {     
+/*             effect(() => {
+                if (target.setupState[key]) {
+                    return Reflect.get(target.setupState, key)
+                } else {
+                    return Reflect.get(target.props, key)
+                }
+            }) */
             if (target.setupState[key]) {
                 return Reflect.get(target.setupState, key)
             } else {

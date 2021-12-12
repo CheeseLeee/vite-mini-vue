@@ -3,6 +3,7 @@ import { processComponent } from "./component"
 
 export let childrenComponents = []
 export const mount = (vnode, container) => {
+    
     if (typeof vnode.tag === 'string') {
         var el = vnode.el = document.createElement(vnode.tag)
         if (vnode.props) {
