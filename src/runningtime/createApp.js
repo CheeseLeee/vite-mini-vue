@@ -15,9 +15,15 @@ import {
     registerComponent
 } from './component'
 
+
+function watchEffect(fn) {
+    effect(() => {
+        fn()
+    })
+}
 export function createApp(rootComponent, rootComponentProps) {
-    processComponent(rootComponent, rootComponentProps,'root')
-    let proxy = rootComponent._instance.proxy   
+    processComponent(rootComponent, rootComponentProps, 'root')
+    let proxy = rootComponent._instance.proxy
     let isMounted = false
     let oldVnode = null
 
@@ -27,26 +33,22 @@ export function createApp(rootComponent, rootComponentProps) {
         isRoot: true,
         mount(selector) {
             var container = document.querySelector(selector)
-            if (!isMounted) {                
-                oldVnode = rootComponent.render(proxy)
-                mount(oldVnode, container)
-                isMounted = true
-                
-            }
-
-/*              effect(() => {
+            effect(() => {
                 if (!isMounted) {
-                    oldVnode = rootComponent.render(proxy)
-                    
-                    mount(oldVnode, container)
-                    isMounted = true
+                    oldVnode = rootComponent.render(proxy)   
+                     
                 } else {
                     console.log('effect')
                     const newVnode = rootComponent.render(proxy)
+                    
                     patch(oldVnode, newVnode)
                     oldVnode = newVnode
                 }
-            })  */
+            })            
+            if (!isMounted) {
+                mount(oldVnode, container)
+                isMounted = true
+            }
         },
         component(childComName, childComData) {
             childrenComponents.push(childComData)

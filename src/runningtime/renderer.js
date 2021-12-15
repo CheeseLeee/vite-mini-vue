@@ -1,3 +1,4 @@
+import { effect } from "../reactive/reactive"
 import { isObject } from "../untils"
 import { processComponent } from "./component"
 
@@ -27,33 +28,49 @@ export const mount = (vnode, container) => {
             }
         }
         container.appendChild(el)
-    } else {
+    } else {       
         let com = vnode.tag
         checkeInRootComponent(com, vnode, container)
     }
 }
 
 let preCom
-function checkeInRootComponent(com, vnode, container) {
+function checkeInRootComponent(com, vnode, container) {    
     if (typeof com === 'string') return
     let isInPreCom
     if (preCom) {
-        for (var k in preCom.component) {
+        for (var k in preCom.component) {            
             if (com === preCom.component[k]) {
                 isInPreCom = true
             }
         }
     }
     let isInRootComponent = childrenComponents.includes(com)
+    
     if (isInRootComponent || isInPreCom) {
         mountCom(com, vnode, container)
     } else {
     }
 }
+
 function mountCom(com, vnode, container) {
     processComponent(com, vnode.props, com.name)
     preCom = com
-    let comRenderVode = com.render(com._instance.proxy)
+    com.isMounted = false
+    let comRenderVode
+    
+     effect(() => {
+        if(!com.isMounted){ 
+            comRenderVode = com.render(com._instance.proxy)           
+            com.oldVnode = comRenderVode
+            com.isMounted = true
+        
+        }else{
+            console.log('childEffect')
+            comRenderVode = com.render(com._instance.proxy)
+            patch(com.oldVnode,comRenderVode)
+        }
+    })   
     let isNotNestedComSelf = notNestedComSelf(comRenderVode,com)
     if (isNotNestedComSelf) {
         mount(comRenderVode, container)
@@ -77,6 +94,8 @@ function notNestedComSelf(comVnode,currentCom) {
 }
 
 export function patch(n1, n2) {
+    
+    if(isObject(n1.tag) && isObject(n2.tag) && n1.tag === n2.tag) return
     if (n1.tag !== n2.tag) {
         const n1ElPartent = n1.el.parentNode
         n1ElPartent.removeChild(n1.el)

@@ -4,20 +4,46 @@ import { createApp } from './src/runningtime/createApp'
 
 import { ref, reactive, computed } from './src/reactive/reactive' 
 
-const AppChild = {
+const AppSon = {
     setup(props,ctx){
-        let count = ref(0)
+        let conut = ref(0)
         function changeCount(){
-            count.value++
+            conut.value++
         }
         return {
-            count,changeCount
+            conut,changeCount
+        }
+    },  
+    render(proxy){
+        return h('div',{class:'colorGreen'},[
+            h('p',{},'son-conut:' + proxy.conut.value),
+            h('button',{onClick:proxy.changeCount},'changeSon-Count'),
+        ])
+    }  
+}
+
+const AppChild = {
+    component:{
+        AppSon
+    },
+    setup(props,ctx){
+        let prduct = reactive({
+            price:100,
+            n:1
+        })
+        function changePrice(){
+            prduct.n++
+        }
+        return {
+            prduct,changePrice
         }
     },
     render(proxy){
         return h('div',{class:'colorRed'},[
-            h('p',{},'child-conut:' + proxy.count.value),
-            h('button',{onClick:proxy.changeCount},'changechild-Count'),
+            h('p',{},'child-conut:' + proxy.prduct.n),
+            h('button',{onClick:proxy.changePrice},'changechild-price'),
+            h(AppSon,{},{}),
+            h(AppSon,{},{})
         ])
     }  
 }
@@ -35,7 +61,8 @@ const App = {
         return h('div',{class:'colorGreen'},[
             h('p',{},'conut:' + proxy.count.value),
             h('button',{onClick:proxy.changeCount},'changeCount'),
-            h(AppChild,{},{})
+            h(AppChild,{},{}),
+            h(AppChild,{},{}),
         ])
     }
 }
