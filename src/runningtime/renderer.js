@@ -22,7 +22,9 @@ export const mount = (vnode, container) => {
             if (typeof vnode.children === 'string') {
                 el.textContent = vnode.children
             } else {
-                vnode.children.forEach(element => {
+                
+                vnode.children.forEach(element => {                    
+                    
                     mount(element, el)
                 });
             }
@@ -30,21 +32,26 @@ export const mount = (vnode, container) => {
         container.appendChild(el)
     } else {       
         let com = vnode.tag
+
+        
         checkeInRootComponent(com, vnode, container)
     }
 }
 
-let preCom
+
 function checkeInRootComponent(com, vnode, container) {    
     if (typeof com === 'string') return
     let isInPreCom
-    if (preCom) {
-        for (var k in preCom.component) {            
-            if (com === preCom.component[k]) {
+    debugger
+    if(com.partent){
+        for (var k in com.partent.component) {            
+            if (com === com.partent.component[k]) {
                 isInPreCom = true
             }
         }
     }
+
+   
     let isInRootComponent = childrenComponents.includes(com)
     
     if (isInRootComponent || isInPreCom) {
@@ -55,13 +62,18 @@ function checkeInRootComponent(com, vnode, container) {
 
 function mountCom(com, vnode, container) {
     processComponent(com, vnode.props, com.name)
-    preCom = com
+  
     com.isMounted = false
-    let comRenderVode
-    
+    let comRenderVode    
      effect(() => {
         if(!com.isMounted){ 
-            comRenderVode = com.render(com._instance.proxy)           
+            comRenderVode = com.render(com._instance.proxy)            
+            comRenderVode.children.forEach(ele => {
+                if(isObject(ele.tag)){
+                    ele.tag.partent = com
+                }
+            })
+                    
             com.oldVnode = comRenderVode
             com.isMounted = true
         
