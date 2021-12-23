@@ -41,8 +41,8 @@ export const mount = (vnode, container) => {
 
 function checkeInRootComponent(com, vnode, container) {    
     if (typeof com === 'string') return
-    let isInPreCom
-    debugger
+    let isInPreCom = true
+    
     if(com.partent){
         for (var k in com.partent.component) {            
             if (com === com.partent.component[k]) {
@@ -68,18 +68,19 @@ function mountCom(com, vnode, container) {
      effect(() => {
         if(!com.isMounted){ 
             comRenderVode = com.render(com._instance.proxy)            
-            comRenderVode.children.forEach(ele => {
+            comRenderVode.children.forEach(ele => {                
                 if(isObject(ele.tag)){
                     ele.tag.partent = com
                 }
-            })
-                    
+            })                    
             com.oldVnode = comRenderVode
             com.isMounted = true
         
         }else{
             console.log('childEffect')
+            
             comRenderVode = com.render(com._instance.proxy)
+            
             patch(com.oldVnode,comRenderVode)
         }
     })   

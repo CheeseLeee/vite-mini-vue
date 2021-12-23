@@ -3,6 +3,7 @@ import { h } from './src/runningtime/h'
 import { createApp } from './src/runningtime/createApp'
 
 import { ref, reactive, computed } from './src/reactive/reactive' 
+import { defineComponent } from './src/runningtime/component'
 
 const AppSonChild = {
     name:"AppSonChild",
@@ -32,16 +33,20 @@ const AppSon = {
         let conut = ref(0)
         function changeCount(){
             conut.value++
+            console.log(conut.value)
+            console.log(ctx)
         }
         return {
             conut,changeCount
         }
     },  
     render(proxy){
+        console.log('-----------------------')
+        console.log(proxy.conut.value,'???')
         return h('div',{class:'colorGreen'},[
             h('p',{},'son-conut:' + proxy.conut.value),
             h('button',{onClick:proxy.changeCount},'changeSon-Count'),
-            h(AppSonChild,{},{})
+            h(defineComponent(AppSonChild) ,{},{})
         ])
     }  
 }
@@ -66,8 +71,8 @@ const AppChild = {
         return h('div',{class:'colorRed'},[
             h('p',{},'child-conut:' + proxy.prduct.n),
             h('button',{onClick:proxy.changePrice},'changechild-price'),
-            h(AppSon,{},{}),
-            
+            h(defineComponent(AppSon),{},{}),
+            h(defineComponent(AppSon),{},{}),
         ])
     }  
 }
@@ -85,6 +90,7 @@ const App = {
         return h('div',{class:'colorGreen'},[
             h('p',{},'conut:' + proxy.count.value),
             h('button',{onClick:proxy.changeCount},'changeCount'),
+            h('p',{},'woSHIP'),
             h(AppChild,{},{}),
            
         ])

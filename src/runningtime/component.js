@@ -7,9 +7,16 @@ import {mount,patch} from './renderer'
 export function registerComponent(componentName, childComData) {
     //processComponent(childComData, undefined, componentName)
 }
+
+export function defineComponent(com){
+    return {...com}
+}
 let uid = 0
 export function processComponent(rootComponent, rootComponentProps, componentName) {
-
+    if(rootComponent._instance){
+        rootComponent._instance = null
+    }
+    
     let comid = uid++ 
     let instance = {
         name: componentName,
@@ -50,14 +57,8 @@ export function processComponent(rootComponent, rootComponentProps, componentNam
         instance.setupState = setupResult
     }
     let handler = {
-        get(target, key, reciver) {     
-/*             effect(() => {
-                if (target.setupState[key]) {
-                    return Reflect.get(target.setupState, key)
-                } else {
-                    return Reflect.get(target.props, key)
-                }
-            }) */
+        get(target, key, reciver) {   
+            
             if (target.setupState[key]) {
                 return Reflect.get(target.setupState, key)
             } else {
@@ -65,8 +66,12 @@ export function processComponent(rootComponent, rootComponentProps, componentNam
             }
         },
         set(target, key, value, recier) {
+            debugger
             if (target.setupState[key]) {
-                return Reflect.set(target.setupState, key, value)
+                let isRight = Reflect.set(target.setupState, key, value)
+                console.log(isRight)
+                
+                return isRight
             } else {
                 console.warn('err');
             }
