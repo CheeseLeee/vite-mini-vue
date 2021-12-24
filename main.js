@@ -46,7 +46,7 @@ const AppSon = {
         return h('div',{class:'colorGreen'},[
             h('p',{},'son-conut:' + proxy.conut.value),
             h('button',{onClick:proxy.changeCount},'changeSon-Count'),
-            h(defineComponent(AppSonChild) ,{},{})
+            h(AppSonChild ,{},{})
         ])
     }  
 }
@@ -71,8 +71,8 @@ const AppChild = {
         return h('div',{class:'colorRed'},[
             h('p',{},'child-conut:' + proxy.prduct.n),
             h('button',{onClick:proxy.changePrice},'changechild-price'),
-            h(defineComponent(AppSon),{},{}),
-            h(defineComponent(AppSon),{},{}),
+            h(AppSon,{},{}),
+            h(AppSon,{},{}),
         ])
     }  
 }

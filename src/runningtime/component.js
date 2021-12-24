@@ -13,10 +13,7 @@ export function defineComponent(com){
 }
 let uid = 0
 export function processComponent(rootComponent, rootComponentProps, componentName) {
-    if(rootComponent._instance){
-        rootComponent._instance = null
-    }
-    
+
     let comid = uid++ 
     let instance = {
         name: componentName,
@@ -77,6 +74,6 @@ export function processComponent(rootComponent, rootComponentProps, componentNam
             }
         }
     }
-    instance.proxy = new Proxy(instance, handler)
-    rootComponent._instance = instance
+    return new Proxy(instance, handler)
+
 }

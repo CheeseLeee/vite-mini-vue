@@ -41,7 +41,7 @@ export const mount = (vnode, container) => {
 
 function checkeInRootComponent(com, vnode, container) {    
     if (typeof com === 'string') return
-    let isInPreCom = true
+    let isInPreCom 
     
     if(com.partent){
         for (var k in com.partent.component) {            
@@ -61,13 +61,13 @@ function checkeInRootComponent(com, vnode, container) {
 }
 
 function mountCom(com, vnode, container) {
-    processComponent(com, vnode.props, com.name)
-  
+    let proxy = processComponent(com, vnode.props, com.name)
+    
     com.isMounted = false
     let comRenderVode    
      effect(() => {
         if(!com.isMounted){ 
-            comRenderVode = com.render(com._instance.proxy)            
+            comRenderVode = com.render(proxy)            
             comRenderVode.children.forEach(ele => {                
                 if(isObject(ele.tag)){
                     ele.tag.partent = com
@@ -79,8 +79,8 @@ function mountCom(com, vnode, container) {
         }else{
             console.log('childEffect')
             
-            comRenderVode = com.render(com._instance.proxy)
-            
+            comRenderVode = com.render(proxy)  
+                      
             patch(com.oldVnode,comRenderVode)
         }
     })   
@@ -107,7 +107,7 @@ function notNestedComSelf(comVnode,currentCom) {
 }
 
 export function patch(n1, n2) {
-    
+    debugger
     if(isObject(n1.tag) && isObject(n2.tag) && n1.tag === n2.tag) return
     if (n1.tag !== n2.tag) {
         const n1ElPartent = n1.el.parentNode

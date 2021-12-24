@@ -22,8 +22,7 @@ function watchEffect(fn) {
     })
 }
 export function createApp(rootComponent, rootComponentProps) {
-    processComponent(rootComponent, rootComponentProps, 'root')
-    let proxy = rootComponent._instance.proxy
+    let proxy = processComponent(rootComponent, rootComponentProps, 'root')
     let isMounted = false
     let oldVnode = null
 
