@@ -15,7 +15,7 @@ export function effect(eff){
 
 //console.log(`total:${total};salePrice:${salePrice.value}`) //27,9 
 function track(target,key){      
-    console.log(activeEffect) 
+
     if(activeEffect){
         let depsMap = targetMap.get(target)
         if(!depsMap){
@@ -30,7 +30,7 @@ function track(target,key){
         dep.add(activeEffect)
         
     }
-    console.log(targetMap)
+   
 }
 function trigger(target,key){
     let depsMap = targetMap.get(target)
@@ -45,7 +45,7 @@ export function reactive(target){
     const handler = {
         get(target,key,reciver){          
             let result = Reflect.get(target,key,reciver)
-            console.log('get',result)
+           
             track(target,key)
             return result
         },

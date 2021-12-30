@@ -62,26 +62,28 @@ function checkeInRootComponent(com, vnode, container) {
 
 function mountCom(com, vnode, container) {
     let proxy = processComponent(com, vnode.props, com.name)
-    
-    com.isMounted = false
+    let cloneCom = {...com}
+    cloneCom.isMounted = false
     let comRenderVode    
      effect(() => {
-        if(!com.isMounted){ 
-            comRenderVode = com.render(proxy)            
+        if(!cloneCom.isMounted){ 
+            comRenderVode = cloneCom.render(proxy)            
             comRenderVode.children.forEach(ele => {                
                 if(isObject(ele.tag)){
-                    ele.tag.partent = com
+                    ele.tag.partent = cloneCom
                 }
             })                    
-            com.oldVnode = comRenderVode
-            com.isMounted = true
+            cloneCom.oldVnode = comRenderVode
+            cloneCom.isMounted = true
         
         }else{
-            console.log('childEffect')
+            console.log('childEffect',cloneCom.oldVnode)
             
-            comRenderVode = com.render(proxy)  
-                      
-            patch(com.oldVnode,comRenderVode)
+            comRenderVode = cloneCom.render(proxy)  
+            console.log(comRenderVode)   
+            
+            patch(cloneCom.oldVnode,comRenderVode)
+            cloneCom.oldVnode = comRenderVode 
         }
     })   
     let isNotNestedComSelf = notNestedComSelf(comRenderVode,com)
@@ -107,7 +109,7 @@ function notNestedComSelf(comVnode,currentCom) {
 }
 
 export function patch(n1, n2) {
-    debugger
+    
     if(isObject(n1.tag) && isObject(n2.tag) && n1.tag === n2.tag) return
     if (n1.tag !== n2.tag) {
         const n1ElPartent = n1.el.parentNode
