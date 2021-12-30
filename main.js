@@ -33,19 +33,21 @@ const AppSon = {
         let conut = ref(0)
         function changeCount(){
             conut.value++
-            console.log(conut.value)
-            console.log(ctx)
+
+            console.log(props.num++)
         }
         return {
             conut,changeCount
         }
     },  
     render(proxy){
-        console.log('-----------------------')
-        console.log(proxy.conut.value,'???')
+        if(proxy.num){
+            console.log('eeeee')
+        }
         return h('div',{class:'colorGreen'},[
             h('p',{},'son-conut:' + proxy.conut.value),
             h('button',{onClick:proxy.changeCount},'changeSon-Count'),
+            h('h2',{},`propsShow:${proxy.num}`),
             h(AppSonChild ,{},{})
         ])
     }  
@@ -72,7 +74,8 @@ const AppChild = {
             h('p',{},'child-conut:' + proxy.prduct.n),
             h('button',{onClick:proxy.changePrice},'changechild-price'),
             h(AppSon,{},{}),
-            h(AppSon,{},{}),
+            h(AppSon,{num:2},{}),
+            
         ])
     }  
 }

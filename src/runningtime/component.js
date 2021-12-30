@@ -35,8 +35,10 @@ export function processComponent(rootComponent, rootComponentProps, componentNam
         }
     }
     let propsHandler = {
+        
         get(target, key, reciver) {
-            return Reflect.get(target, key, reciver)
+            debugger
+            return Reflect.get(target.props, key, reciver)
         },
         set(target, key, value, reciver) {
             console.warn('修改失败,单向数据流中禁止修改传递的props')
@@ -55,11 +57,12 @@ export function processComponent(rootComponent, rootComponentProps, componentNam
     }
     let handler = {
         get(target, key, reciver) {   
-            
             if (target.setupState[key]) {
                 return Reflect.get(target.setupState, key)
+            } else if(target.props[key]) {
+                return Reflect.get(propsProxy, key)
             } else {
-                return Reflect.get(target.props, key)
+                return undefined
             }
         },
         set(target, key, value, recier) {
