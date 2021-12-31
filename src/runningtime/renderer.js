@@ -62,6 +62,7 @@ function checkeInRootComponent(com, vnode, container) {
 
 function mountCom(com, vnode, container) {
     let proxy = processComponent(com, vnode.props, com.name)
+    //处理相同的组件复用
     let cloneCom = {...com}
     cloneCom.isMounted = false
     let comRenderVode    
@@ -77,6 +78,7 @@ function mountCom(com, vnode, container) {
             cloneCom.isMounted = true
         
         }else{
+            cloneCom.updated()
             console.log('childEffect',cloneCom.oldVnode)
             comRenderVode = cloneCom.render(proxy)  
             console.log(comRenderVode)               

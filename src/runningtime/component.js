@@ -1,4 +1,3 @@
-import { effect } from '../reactive/reactive'
 import {
     isObject
 } from '../untils'
@@ -74,5 +73,13 @@ export function processComponent(component, componentProps, componentName) {
         }
     }
     return new Proxy(instance, handler)
+
+}
+
+function cycly(){
+
+}
+
+export function updated(fn){
 
 }
