@@ -78,10 +78,8 @@ function mountCom(com, vnode, container) {
         
         }else{
             console.log('childEffect',cloneCom.oldVnode)
-            
             comRenderVode = cloneCom.render(proxy)  
-            console.log(comRenderVode)   
-            
+            console.log(comRenderVode)               
             patch(cloneCom.oldVnode,comRenderVode)
             cloneCom.oldVnode = comRenderVode 
         }

@@ -3,22 +3,18 @@ import {
     isObject
 } from '../untils'
  '../runningtime/renderer'
-import {mount,patch} from './renderer'
-export function registerComponent(componentName, childComData) {
-    //processComponent(childComData, undefined, componentName)
-}
+
 
 export function defineComponent(com){
     return {...com}
 }
 let uid = 0
-export function processComponent(rootComponent, rootComponentProps, componentName) {
-
+export function processComponent(component, componentProps, componentName) {
     let comid = uid++ 
     let instance = {
         name: componentName,
         children: [],
-        props:rootComponentProps,
+        props:componentProps,
         attrs: {},
         setupState: null,
         proxy: null,
@@ -31,13 +27,13 @@ export function processComponent(rootComponent, rootComponentProps, componentNam
             emit() {
                 console.log('emit')
             },
-            props: rootComponentProps
+            props: componentProps
         }
     }
     let propsHandler = {
         
         get(target, key, reciver) {
-            debugger
+            
             return Reflect.get(target.props, key, reciver)
         },
         set(target, key, value, reciver) {
@@ -45,13 +41,13 @@ export function processComponent(rootComponent, rootComponentProps, componentNam
             return Reflect.set(target, key, Reflect.get(target, key, reciver), reciver)
         }
     }
-    if(rootComponent.component){
-        for(var k in  rootComponent.component){
-            instance.childrenComponent.push({...rootComponent.component[k]})
+    if(component.component){
+        for(var k in  component.component){
+            instance.childrenComponent.push({...component.component[k]})
         }
     }
     let propsProxy = new Proxy(instance, propsHandler)
-    let setupResult = rootComponent.setup(propsProxy, instance.ctx)
+    let setupResult = component.setup(propsProxy, instance.ctx)
     if (isObject(setupResult)) {
         instance.setupState = setupResult
     }

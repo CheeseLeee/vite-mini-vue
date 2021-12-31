@@ -12,7 +12,7 @@ import {
 } from './renderer'
 import {
     processComponent,
-    registerComponent
+ 
 } from './component'
 
 

@@ -1,9 +1,7 @@
 import './style.css'
 import { h } from './src/runningtime/h'
 import { createApp } from './src/runningtime/createApp'
-
 import { ref, reactive, computed } from './src/reactive/reactive' 
-import { defineComponent } from './src/runningtime/component'
 
 const AppSonChild = {
     name:"AppSonChild",
@@ -20,6 +18,7 @@ const AppSonChild = {
         return h('div',{class:'colorGreen'},[
             h('p',{},'AppSonChild-conut:' + proxy.conut.value),
             h('button',{onClick:proxy.changeCount},'AppSonChild-Count'),
+            h('h2',{},`${proxy.name}`)
         ])
     }  
 }
@@ -45,7 +44,7 @@ const AppSon = {
                 h('p',{},'son-conut:' + proxy.conut.value),
                 h('button',{onClick:proxy.changeCount},'changeSon-Count'),
                 h('h2',{},`propsShow:${proxy.num}`),
-                h(AppSonChild ,{},{})
+                h(AppSonChild ,{name:'marry'},{})
             ])
         }else{
             return h('div',{class:'colorGreen'},[
