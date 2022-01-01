@@ -1,10 +1,10 @@
 import { effect } from "../reactive/reactive"
 import { isObject } from "../untils"
 import { processComponent } from "./component"
+import { nextTick } from "./nextTick"
 
 export let childrenComponents = []
-export const mount = (vnode, container) => {
-    
+export const mount = (vnode, container) => {   
     if (typeof vnode.tag === 'string') {
         var el = vnode.el = document.createElement(vnode.tag)
         if (vnode.props) {
@@ -32,8 +32,6 @@ export const mount = (vnode, container) => {
         container.appendChild(el)
     } else {       
         let com = vnode.tag
-
-        
         checkeInRootComponent(com, vnode, container)
     }
 }
@@ -41,8 +39,7 @@ export const mount = (vnode, container) => {
 
 function checkeInRootComponent(com, vnode, container) {    
     if (typeof com === 'string') return
-    let isInPreCom 
-    
+    let isInPreCom     
     if(com.partent){
         for (var k in com.partent.component) {            
             if (com === com.partent.component[k]) {
@@ -50,10 +47,7 @@ function checkeInRootComponent(com, vnode, container) {
             }
         }
     }
-
-   
-    let isInRootComponent = childrenComponents.includes(com)
-    
+    let isInRootComponent = childrenComponents.includes(com)    
     if (isInRootComponent || isInPreCom) {
         mountCom(com, vnode, container)
     } else {
@@ -66,6 +60,14 @@ function mountCom(com, vnode, container) {
     let cloneCom = {...com}
     cloneCom.isMounted = false
     let comRenderVode    
+    cloneCom.watcher = function ef(){
+        cloneCom.updated()
+        console.log('childEffect',cloneCom.oldVnode)
+        comRenderVode = cloneCom.render(proxy)  
+        console.log(comRenderVode)               
+        patch(cloneCom.oldVnode,comRenderVode)
+        cloneCom.oldVnode = comRenderVode 
+    }
      effect(() => {
         if(!cloneCom.isMounted){ 
             comRenderVode = cloneCom.render(proxy)            
@@ -78,12 +80,7 @@ function mountCom(com, vnode, container) {
             cloneCom.isMounted = true
         
         }else{
-            cloneCom.updated()
-            console.log('childEffect',cloneCom.oldVnode)
-            comRenderVode = cloneCom.render(proxy)  
-            console.log(comRenderVode)               
-            patch(cloneCom.oldVnode,comRenderVode)
-            cloneCom.oldVnode = comRenderVode 
+            nextTick(cloneCom.watcher)
         }
     })   
     let isNotNestedComSelf = notNestedComSelf(comRenderVode,com)
@@ -96,8 +93,6 @@ function notNestedComSelf(comVnode,currentCom) {
     let isNot = true
     if (Array.isArray(comVnode.children)) {
         let children = comVnode.children
-        console.log(currentCom)
-        
         children.forEach(vnode => {
             if (vnode.tag === currentCom) {
                 console.error('禁止嵌套当前组件本身:' + currentCom._instance.name);
@@ -108,8 +103,7 @@ function notNestedComSelf(comVnode,currentCom) {
     return isNot
 }
 
-export function patch(n1, n2) {
-    
+export function patch(n1, n2) {   
     if(isObject(n1.tag) && isObject(n2.tag) && n1.tag === n2.tag) return
     if (n1.tag !== n2.tag) {
         const n1ElPartent = n1.el.parentNode
