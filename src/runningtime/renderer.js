@@ -4,7 +4,7 @@ import { processComponent } from "./component"
 import { nextTick } from "./nextTick"
 
 export let childrenComponents = []
-export const mount = (vnode, container) => {   
+export const mount = (vnode, container) => {
     if (typeof vnode.tag === 'string') {
         var el = vnode.el = document.createElement(vnode.tag)
         if (vnode.props) {
@@ -22,32 +22,32 @@ export const mount = (vnode, container) => {
             if (typeof vnode.children === 'string') {
                 el.textContent = vnode.children
             } else {
-                
-                vnode.children.forEach(element => {                    
-                    
+
+                vnode.children.forEach(element => {
+
                     mount(element, el)
                 });
             }
         }
         container.appendChild(el)
-    } else {       
+    } else {
         let com = vnode.tag
         checkeInRootComponent(com, vnode, container)
     }
 }
 
 
-function checkeInRootComponent(com, vnode, container) {    
+function checkeInRootComponent(com, vnode, container) {
     if (typeof com === 'string') return
-    let isInPreCom     
-    if(com.partent){
-        for (var k in com.partent.component) {            
+    let isInPreCom
+    if (com.partent) {
+        for (var k in com.partent.component) {
             if (com === com.partent.component[k]) {
                 isInPreCom = true
             }
         }
     }
-    let isInRootComponent = childrenComponents.includes(com)    
+    let isInRootComponent = childrenComponents.includes(com)
     if (isInRootComponent || isInPreCom) {
         mountCom(com, vnode, container)
     } else {
@@ -57,39 +57,40 @@ function checkeInRootComponent(com, vnode, container) {
 function mountCom(com, vnode, container) {
     let proxy = processComponent(com, vnode.props, com.name)
     //处理相同的组件复用
-    let cloneCom = {...com}
+    let cloneCom = { ...com }
     cloneCom.isMounted = false
-    let comRenderVode    
-    cloneCom.watcher = function ef(){
+    let comRenderVode
+    function ef() {
         cloneCom.updated()
-        console.log('childEffect',cloneCom.oldVnode)
-        comRenderVode = cloneCom.render(proxy)  
-        console.log(comRenderVode)               
-        patch(cloneCom.oldVnode,comRenderVode)
-        cloneCom.oldVnode = comRenderVode 
+        console.log('childEffect', cloneCom.oldVnode)
+        comRenderVode = cloneCom.render(proxy)
+        console.log(comRenderVode)
+        patch(cloneCom.oldVnode, comRenderVode)
+        cloneCom.oldVnode = comRenderVode
     }
-     effect(() => {
-        if(!cloneCom.isMounted){ 
-            comRenderVode = cloneCom.render(proxy)            
-            comRenderVode.children.forEach(ele => {                
-                if(isObject(ele.tag)){
+    cloneCom.watcher = ef
+    effect(() => {
+        if (!cloneCom.isMounted) {
+            comRenderVode = cloneCom.render(proxy)
+            comRenderVode.children.forEach(ele => {
+                if (isObject(ele.tag)) {
                     ele.tag.partent = cloneCom
                 }
-            })                    
+            })
             cloneCom.oldVnode = comRenderVode
             cloneCom.isMounted = true
-        
-        }else{
+
+        } else {
             nextTick(cloneCom.watcher)
         }
-    })   
-    let isNotNestedComSelf = notNestedComSelf(comRenderVode,com)
+    })
+    let isNotNestedComSelf = notNestedComSelf(comRenderVode, com)
     if (isNotNestedComSelf) {
         mount(comRenderVode, container)
     }
 }
 
-function notNestedComSelf(comVnode,currentCom) {
+function notNestedComSelf(comVnode, currentCom) {
     let isNot = true
     if (Array.isArray(comVnode.children)) {
         let children = comVnode.children
@@ -103,8 +104,8 @@ function notNestedComSelf(comVnode,currentCom) {
     return isNot
 }
 
-export function patch(n1, n2) {   
-    if(isObject(n1.tag) && isObject(n2.tag) && n1.tag === n2.tag) return
+export function patch(n1, n2) {
+    if (isObject(n1.tag) && isObject(n2.tag) && n1.tag === n2.tag) return
     if (n1.tag !== n2.tag) {
         const n1ElPartent = n1.el.parentNode
         n1ElPartent.removeChild(n1.el)

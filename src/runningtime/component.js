@@ -76,10 +76,4 @@ export function processComponent(component, componentProps, componentName) {
 
 }
 
-function cycly(){
 
-}
-
-export function updated(fn){
-
-}
