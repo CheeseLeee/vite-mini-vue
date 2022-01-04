@@ -16,11 +16,8 @@ import {
 } from './component'
 
 
-function watchEffect(fn) {
-    effect(() => {
-        fn()
-    })
-}
+
+
 export function createApp(rootComponent, rootComponentProps) {
     let proxy = processComponent(rootComponent, rootComponentProps, 'root')
     let isMounted = false
@@ -35,7 +32,8 @@ export function createApp(rootComponent, rootComponentProps) {
             effect(() => {
                 if (!isMounted) {
                     oldVnode = rootComponent.render(proxy)   
-                     
+                    let lastDom = oldVnode
+                    lastDom.onMounted = rootComponent.instance.mountedMethods
                 } else {
                     console.log('effect')
                     const newVnode = rootComponent.render(proxy)

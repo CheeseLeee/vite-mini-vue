@@ -3,9 +3,16 @@ import { h } from './src/runningtime/h'
 import { createApp } from './src/runningtime/createApp'
 import { ref, reactive, computed } from './src/reactive/reactive' 
 import { nextTick } from './src/runningtime/nextTick'
-
+import {onMounted} from './src/runningtime/comCycle'
 const appChild = {
+    
     setup(){
+
+        onMounted(() => {
+            var b = document.getElementById('app')
+            var d = document.getElementsByClassName('appChild')[0]
+            console.log(d,'ddddddd')
+        })
         const num = ref(0)
         function changeNum(){
             num.value++
@@ -19,9 +26,7 @@ const appChild = {
             nextTick(() => {
                 console.log(ele.innerHTML)
             })
-            nextTick(() => {
-                console.log(ele.innerHTML + '?')
-            })
+
         }
         return {
             num,
@@ -41,13 +46,18 @@ const appChild = {
 
 const App = createApp({
     setup(){
-
+        var d = document.getElementsByClassName('colorRed')[0]
+        console.log(d)
+        onMounted(() => {
+            var d = document.getElementsByClassName('colorGreen')[0]
+            console.log(d)
+        })
     },
     render(){
         return h('div',{},[
             h('p',{class:'colorRed'},'i am Root'),
-            h(appChild,{},''),
-            h(appChild,{},''),
+           h(appChild,{},''),
+           /*   h(appChild,{},''), */
         ])
     }
 })

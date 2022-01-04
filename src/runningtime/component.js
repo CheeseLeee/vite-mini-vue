@@ -8,7 +8,14 @@ export function defineComponent(com){
     return {...com}
 }
 let uid = 0
+let mountedMethod
+export function addMounted(fn){
+    mountedMethod = fn
+    console.log(mountedMethod)
+}
+
 export function processComponent(component, componentProps, componentName) {
+
     let comid = uid++ 
     let instance = {
         name: componentName,
@@ -18,6 +25,7 @@ export function processComponent(component, componentProps, componentName) {
         setupState: null,
         proxy: null,
         uid:comid,
+        mountedMethods:null,
         component(childComponent) {
 
         },
@@ -29,6 +37,7 @@ export function processComponent(component, componentProps, componentName) {
             props: componentProps
         }
     }
+    
     let propsHandler = {
         
         get(target, key, reciver) {
@@ -47,6 +56,7 @@ export function processComponent(component, componentProps, componentName) {
     }
     let propsProxy = new Proxy(instance, propsHandler)
     let setupResult = component.setup(propsProxy, instance.ctx)
+    instance.mountedMethods = mountedMethod
     if (isObject(setupResult)) {
         instance.setupState = setupResult
     }
@@ -72,6 +82,7 @@ export function processComponent(component, componentProps, componentName) {
             }
         }
     }
+    component.instance = instance
     return new Proxy(instance, handler)
 
 }

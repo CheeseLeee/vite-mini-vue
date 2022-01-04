@@ -5,6 +5,7 @@ import { nextTick } from "./nextTick"
 
 export let childrenComponents = []
 export const mount = (vnode, container) => {
+    
     if (typeof vnode.tag === 'string') {
         var el = vnode.el = document.createElement(vnode.tag)
         if (vnode.props) {
@@ -20,16 +21,21 @@ export const mount = (vnode, container) => {
         }
         if (vnode.children) {
             if (typeof vnode.children === 'string') {
+                container.appendChild(el)
                 el.textContent = vnode.children
             } else {
-
+                container.appendChild(el)
                 vnode.children.forEach(element => {
-
                     mount(element, el)
                 });
             }
         }
-        container.appendChild(el)
+        //container.appendChild(el)
+          
+        if(vnode.onMounted){
+            vnode.onMounted()
+            
+        }
     } else {
         let com = vnode.tag
         checkeInRootComponent(com, vnode, container)
@@ -62,9 +68,9 @@ function mountCom(com, vnode, container) {
     let comRenderVode
     function ef() {
         cloneCom.updated()
-        console.log('childEffect', cloneCom.oldVnode)
+
         comRenderVode = cloneCom.render(proxy)
-        console.log(comRenderVode)
+
         patch(cloneCom.oldVnode, comRenderVode)
         cloneCom.oldVnode = comRenderVode
     }
@@ -77,6 +83,9 @@ function mountCom(com, vnode, container) {
                     ele.tag.partent = cloneCom
                 }
             })
+            let lastDom = comRenderVode
+            lastDom.onMounted = cloneCom.instance.mountedMethods
+      
             cloneCom.oldVnode = comRenderVode
             cloneCom.isMounted = true
 
