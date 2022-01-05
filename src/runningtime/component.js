@@ -4,9 +4,11 @@ import {
 
 
 let uid = 0
-let mountedMethodCB
+let mountedMethodCB = []
 export function onMounted(fn){
-    mountedMethodCB = fn
+    if(mountedMethodCB.indexOf(fn) === -1){
+        mountedMethodCB.push(fn)
+    }   
 }
 
 export function processComponent(component, componentProps, componentName) {
@@ -49,6 +51,8 @@ export function processComponent(component, componentProps, componentName) {
     let propsProxy = new Proxy(instance, propsHandler)
     let setupResult = component.setup(propsProxy, instance.ctx)
     instance.mountedMethodCB = mountedMethodCB
+    mountedMethodCB = []
+    console.log(instance.mountedMethodCB)
     if (isObject(setupResult)) {
         instance.setupState = setupResult
     }

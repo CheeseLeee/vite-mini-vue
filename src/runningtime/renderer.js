@@ -33,9 +33,11 @@ export const mount = (vnode, container) => {
             }
         }
         //container.appendChild(el)
-          
         if(vnode.onMounted){
-            vnode.onMounted()
+            
+            vnode.onMounted.forEach(fn => {
+                fn()
+            })
             
         }
     } else {

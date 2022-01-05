@@ -33,7 +33,7 @@ export function createApp(rootComponent, rootComponentProps) {
                 if (!isMounted) {
                     oldVnode = rootComponent.render(proxy)   
                     let lastDom = oldVnode
-                    lastDom.onMounted = rootComponent.instance.mountedMethods
+                    lastDom.onMounted = rootComponent.instance.mountedMethodCB
                 } else {
                     console.log('effect')
                     const newVnode = rootComponent.render(proxy)

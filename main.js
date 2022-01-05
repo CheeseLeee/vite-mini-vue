@@ -10,6 +10,9 @@ const appChild = {
             var d = document.getElementsByClassName('appChild')[0]
             console.log(d,'ddddddd')
         })
+        onMounted(() => {
+            console.log('second mounted')
+        })
         const num = ref(0)
         function changeNum(){
             num.value++
@@ -35,8 +38,9 @@ const appChild = {
 
 const App = createApp({
     setup(){
-        var d = document.getElementsByClassName('colorRed')[0]
-        console.log(d)
+        onMounted(() => {
+            console.log('second mounted app')
+        })
         onMounted(() => {
             var d = document.getElementsByClassName('colorGreen')[0]
             console.log(d)
