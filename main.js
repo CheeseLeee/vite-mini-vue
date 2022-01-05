@@ -2,12 +2,9 @@ import './style.css'
 import { h } from './src/runningtime/h'
 import { createApp } from './src/runningtime/createApp'
 import { ref, reactive, computed } from './src/reactive/reactive' 
-import { nextTick } from './src/runningtime/nextTick'
-import {onMounted} from './src/runningtime/comCycle'
-const appChild = {
-    
+import { nextTick ,onMounted} from './src/hooks'
+const appChild = {    
     setup(){
-
         onMounted(() => {
             var b = document.getElementById('app')
             var d = document.getElementsByClassName('appChild')[0]
@@ -19,14 +16,6 @@ const appChild = {
             num.value++
             num.value++
             num.value++
-            num.value++
-            num.value++
-            var ele = document.getElementsByClassName('appChild')[0]
-            console.log(ele.innerHTML)
-            nextTick(() => {
-                console.log(ele.innerHTML)
-            })
-
         }
         return {
             num,
@@ -56,8 +45,7 @@ const App = createApp({
     render(){
         return h('div',{},[
             h('p',{class:'colorRed'},'i am Root'),
-           h(appChild,{},''),
-           /*   h(appChild,{},''), */
+            h(appChild,{},''),
         ])
     }
 })

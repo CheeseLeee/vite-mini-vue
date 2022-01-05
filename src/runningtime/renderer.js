@@ -1,5 +1,7 @@
 import { effect } from "../reactive/reactive"
-import { isObject } from "../untils"
+import {
+    isObject
+} from '../untils/untils'
 import { processComponent } from "./component"
 import { nextTick } from "./nextTick"
 
@@ -84,7 +86,7 @@ function mountCom(com, vnode, container) {
                 }
             })
             let lastDom = comRenderVode
-            lastDom.onMounted = cloneCom.instance.mountedMethods
+            lastDom.onMounted = cloneCom.instance.mountedMethodCB
       
             cloneCom.oldVnode = comRenderVode
             cloneCom.isMounted = true

@@ -1,4 +1,6 @@
-import {isObject} from '../untils'
+import {
+    isObject
+} from '../untils/untils'
 export const h = (tag,props,children) => {
     let vnode = {
         tag,

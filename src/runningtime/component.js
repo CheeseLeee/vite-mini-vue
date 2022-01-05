@@ -1,21 +1,15 @@
 import {
     isObject
-} from '../untils'
- '../runningtime/renderer'
+} from '../untils/untils'
 
 
-export function defineComponent(com){
-    return {...com}
-}
 let uid = 0
-let mountedMethod
-export function addMounted(fn){
-    mountedMethod = fn
-    console.log(mountedMethod)
+let mountedMethodCB
+export function onMounted(fn){
+    mountedMethodCB = fn
 }
 
 export function processComponent(component, componentProps, componentName) {
-
     let comid = uid++ 
     let instance = {
         name: componentName,
@@ -25,7 +19,7 @@ export function processComponent(component, componentProps, componentName) {
         setupState: null,
         proxy: null,
         uid:comid,
-        mountedMethods:null,
+        mountedMethodCB:null,
         component(childComponent) {
 
         },
@@ -39,9 +33,7 @@ export function processComponent(component, componentProps, componentName) {
     }
     
     let propsHandler = {
-        
-        get(target, key, reciver) {
-            
+        get(target, key, reciver) {           
             return Reflect.get(target.props, key, reciver)
         },
         set(target, key, value, reciver) {
@@ -56,7 +48,7 @@ export function processComponent(component, componentProps, componentName) {
     }
     let propsProxy = new Proxy(instance, propsHandler)
     let setupResult = component.setup(propsProxy, instance.ctx)
-    instance.mountedMethods = mountedMethod
+    instance.mountedMethodCB = mountedMethodCB
     if (isObject(setupResult)) {
         instance.setupState = setupResult
     }
@@ -74,8 +66,6 @@ export function processComponent(component, componentProps, componentName) {
             debugger
             if (target.setupState[key]) {
                 let isRight = Reflect.set(target.setupState, key, value)
-                console.log(isRight)
-                
                 return isRight
             } else {
                 console.warn('err');
