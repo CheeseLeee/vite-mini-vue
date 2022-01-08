@@ -2,7 +2,7 @@ import './style.css'
 import { h } from './src/runningtime/h'
 import { createApp } from './src/runningtime/createApp'
 import { ref, reactive, computed } from './src/reactive/reactive' 
-import { nextTick ,onMounted} from './src/hooks'
+import { nextTick ,onMounted,onUpdated} from './src/hooks'
 const appChild = {    
     setup(){
         onMounted(() => {
@@ -12,6 +12,9 @@ const appChild = {
         })
         onMounted(() => {
             console.log('second mounted')
+        })
+        onUpdated(() => {
+            console.log('onUpdated')
         })
         const num = ref(0)
         function changeNum(){
@@ -25,9 +28,7 @@ const appChild = {
             changeNum
         }
     },
-    updated(){
-        console.log('updated')
-    },
+
     render(proxy){
         return h('div',{class:'colorGreen'},[
             h('p',{class:'appChild'},'I am appChild----' + proxy.num.value),

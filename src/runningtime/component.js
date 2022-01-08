@@ -5,10 +5,17 @@ import {
 
 let uid = 0
 let mountedMethodCB = []
+let updateDCB = []
 export function onMounted(fn){
     if(mountedMethodCB.indexOf(fn) === -1){
         mountedMethodCB.push(fn)
     }   
+}
+
+export function onUpdated(fn){
+    if(updateDCB.indexOf(fn) === -1){
+        updateDCB.push(fn)
+    }  
 }
 
 export function processComponent(component, componentProps, componentName) {
@@ -52,6 +59,8 @@ export function processComponent(component, componentProps, componentName) {
     let setupResult = component.setup(propsProxy, instance.ctx)
     instance.mountedMethodCB = mountedMethodCB
     mountedMethodCB = []
+    instance.updateDCB = updateDCB
+    updateDCB = []
     console.log(instance.mountedMethodCB)
     if (isObject(setupResult)) {
         instance.setupState = setupResult

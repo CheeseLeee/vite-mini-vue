@@ -47,6 +47,7 @@ export const mount = (vnode, container) => {
 }
 
 
+
 function checkeInRootComponent(com, vnode, container) {
     if (typeof com === 'string') return
     let isInPreCom
@@ -71,8 +72,10 @@ function mountCom(com, vnode, container) {
     cloneCom.isMounted = false
     let comRenderVode
     function ef() {
-        cloneCom.updated()
-
+        
+        cloneCom.instance.updateDCB.forEach(item => {
+            item()
+        })
         comRenderVode = cloneCom.render(proxy)
 
         patch(cloneCom.oldVnode, comRenderVode)
