@@ -14,6 +14,7 @@ export function onMounted(fn){
 export function processComponent(component, componentProps, componentName) {
     let comid = uid++ 
     let instance = {
+        isRouterView:component.isRouterView,
         name: componentName,
         children: [],
         props:componentProps,

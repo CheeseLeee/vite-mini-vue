@@ -19,6 +19,7 @@ import {
 
 
 export function createApp(rootComponent, rootComponentProps) {
+    console.log('create')
     let proxy = processComponent(rootComponent, rootComponentProps, 'root')
     let isMounted = false
     let oldVnode = null
@@ -31,7 +32,9 @@ export function createApp(rootComponent, rootComponentProps) {
             var container = document.querySelector(selector)
             effect(() => {
                 if (!isMounted) {
+                    
                     oldVnode = rootComponent.render(proxy)   
+                    
                     let lastDom = oldVnode
                     lastDom.onMounted = rootComponent.instance.mountedMethodCB
                 } else {

@@ -3,6 +3,7 @@ export class Router {
         this.curURL = ''
         this.routes = new Map()
         this.refresh = function(){
+            console.log('cccc')
             this.curURL = location.hash.slice(1) || '/'
             if(this.routes.get(this.curURL)){
                 this.routes.get(this.curURL)()

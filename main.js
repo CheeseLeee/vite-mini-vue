@@ -1,18 +1,25 @@
 import './style.css'
-import { h } from './packages/runningtime/h'
-import { ref, reactive, computed } from './packages/reactive/reactive' 
-import { nextTick ,onMounted} from './packages/hooks'
-import { Router } from './packages/router'
-import {App} from './App'
+import { createApp } from './packages/runningtime/createApp'
+import Appcom from './App'
 import AppChild from './src/components/AppChild'
+import { Router } from './packages/router'
+import { addRouterViews, RouterView } from './packages/router/component/RouterView'
+import Menu from './src/views/Menu'
 var router = new Router('hash')
-router.init()
+
 router.route('/',function(){
-    alert('/')
+    addRouterViews(Menu)
+    console.log(router)
+    
 })
 router.route('/menu',function(){
-    alert('/menu')
+    addRouterViews(Menu)
+    console.log(router)
 })
-
+addRouterViews(Menu)
+router.init()
+const App = createApp(Appcom)
 App.component('appChild',AppChild)
+App.component('RouterView',RouterView)
+App.component('Menu',Menu)
 App.mount('#app')

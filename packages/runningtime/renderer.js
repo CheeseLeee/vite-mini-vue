@@ -65,6 +65,7 @@ function checkeInRootComponent(com, vnode, container) {
 }
 
 function mountCom(com, vnode, container) {
+    
     let proxy = processComponent(com, vnode.props, com.name)
     //处理相同的组件复用
     let cloneCom = { ...com }
@@ -81,12 +82,17 @@ function mountCom(com, vnode, container) {
     cloneCom.watcher = ef
     effect(() => {
         if (!cloneCom.isMounted) {
+            
             comRenderVode = cloneCom.render(proxy)
-            comRenderVode.children.forEach(ele => {
-                if (isObject(ele.tag)) {
-                    ele.tag.partent = cloneCom
-                }
-            })
+            
+            if(Array.isArray(comRenderVode.children) ){
+                comRenderVode.children.forEach(ele => {
+                    if (isObject(ele.tag)) {
+                        ele.tag.partent = cloneCom
+                    }
+                })
+            }
+
             let lastDom = comRenderVode
             lastDom.onMounted = cloneCom.instance.mountedMethodCB
       
@@ -97,6 +103,7 @@ function mountCom(com, vnode, container) {
             nextTick(cloneCom.watcher)
         }
     })
+
     let isNotNestedComSelf = notNestedComSelf(comRenderVode, com)
     if (isNotNestedComSelf) {
         mount(comRenderVode, container)
