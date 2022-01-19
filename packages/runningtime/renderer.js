@@ -1,11 +1,12 @@
 import { effect } from "../reactive/reactive"
+import { RouterView } from "../router/component/RouterView"
 import {
     isObject
 } from '../untils/untils'
 import { processComponent } from "./component"
 import { nextTick } from "./nextTick"
 
-export let childrenComponents = []
+export let childrenComponents = [RouterView]
 export const mount = (vnode, container) => {
     
     if (typeof vnode.tag === 'string') {
@@ -72,19 +73,25 @@ function mountCom(com, vnode, container) {
     cloneCom.isMounted = false
     let comRenderVode
     function ef() {
-        cloneCom.updated()
-
+        //cloneCom.updated()
         comRenderVode = cloneCom.render(proxy)
-
+        
+        if(cloneCom.isRouterView){
+            comRenderVode = comRenderVode.tag.render(proxy)              
+        }
         patch(cloneCom.oldVnode, comRenderVode)
         cloneCom.oldVnode = comRenderVode
+    
+
     }
     cloneCom.watcher = ef
     effect(() => {
         if (!cloneCom.isMounted) {
-            
             comRenderVode = cloneCom.render(proxy)
             
+            if(cloneCom.isRouterView){
+                comRenderVode = comRenderVode.tag.render(proxy)              
+            }
             if(Array.isArray(comRenderVode.children) ){
                 comRenderVode.children.forEach(ele => {
                     if (isObject(ele.tag)) {
@@ -125,6 +132,7 @@ function notNestedComSelf(comVnode, currentCom) {
 }
 
 export function patch(n1, n2) {
+    
     if (isObject(n1.tag) && isObject(n2.tag) && n1.tag === n2.tag) return
     if (n1.tag !== n2.tag) {
         const n1ElPartent = n1.el.parentNode

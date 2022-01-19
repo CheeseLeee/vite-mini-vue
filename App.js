@@ -7,7 +7,7 @@ export default  {
 
     },
     render(){
-        console.log(h(RouterView,{},{}),)
+
         return h('div',{},[
             h(RouterView,{},{}),
             h('p',{class:'colorRed'},'i am Root'),

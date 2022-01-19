@@ -5,21 +5,19 @@ import AppChild from './src/components/AppChild'
 import { Router } from './packages/router'
 import { addRouterViews, RouterView } from './packages/router/component/RouterView'
 import Menu from './src/views/Menu'
-var router = new Router('hash')
+import Com from './src/views/Com'
+const routes = [
+    { path: '/', component: Com },
+    { path: '/menu', component: Menu }
+  ]
+var router = new Router({
+    mode:'hash',
+    routes
+})
 
-router.route('/',function(){
-    addRouterViews(Menu)
-    console.log(router)
-    
-})
-router.route('/menu',function(){
-    addRouterViews(Menu)
-    console.log(router)
-})
-addRouterViews(Menu)
-router.init()
 const App = createApp(Appcom)
 App.component('appChild',AppChild)
-App.component('RouterView',RouterView)
 App.component('Menu',Menu)
+App.component('RouterView',RouterView)
+App.component('Com',Com)
 App.mount('#app')

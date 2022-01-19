@@ -1,20 +1,22 @@
 import { h } from "../../runningtime/h"
 import Menu from '../../../src/views/Menu'
-let routerViews = []
-export function addRouterViews(com){
-    routerViews.push(com)
-    console.log(routerViews)
+import { ref } from "../../reactive/reactive"
+let routerViews = new Map()
+export function addRouterViews(path,com){
+    routerViews.set(path,com)
 }
 export const RouterView = {
+    currentPath:ref('/'),
+    isRouterView:true,
     setup(){
 
     },
     component:{
-        Menu
+        
     },
     render(){   
-           
-        console.log(routerViews[0])  
-        return h(routerViews[0],{},'div')
+        
+        console.log(this.currentPath.value)
+        return h(routerViews.get(this.currentPath.value),{},'')
     }
 }

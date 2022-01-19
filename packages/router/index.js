@@ -1,23 +1,38 @@
-export class Router {
-    constructor(mode){
-        this.curURL = ''
-        this.routes = new Map()
-        this.refresh = function(){
-            console.log('cccc')
-            this.curURL = location.hash.slice(1) || '/'
-            if(this.routes.get(this.curURL)){
-                this.routes.get(this.curURL)()
-            }            
+import { addRouterViews, RouterView } from "./component/RouterView"
+ export class Router {
+    constructor(option){
+        let routesMap = new Map()
+        for(var i of option.routes){
+            
+            let path = i.path
+            let com = i.component
+            addRouterViews(path,com)
+            routesMap.set(path, () => {
+                RouterView.currentPath.value = path
+                console.log(path)
+            })
         }
-        this.init = function(){
-            if(mode === 'hash'){
-                window.addEventListener('load',this.refresh.bind(this))
-                window.addEventListener('hashchange',this.refresh.bind(this))
-            }
-        }
-        this.route = function(path,callback){
-            this.routes.set(path,callback || function(){})
-        }
+        this.curURL = ''    
+        window.onload = function(){
+            this.curURL = location.hash.slice(1)
+            routesMap.get(this.curURL)()          
+        } 
+        window.addEventListener('hashchange',() => {
+           this.curURL = location.hash.slice(1)
+           routesMap.get(this.curURL)()
+        })
     }
     
 }
+
+/* router.route('/',function(){
+    RouterView.currentPath.value = '/'
+    console.log('/')  
+})
+router.route('/menu',function(){
+    RouterView.currentPath.value = '/menu'
+    console.log('menu')
+})
+
+addRouterViews('/menu',Menu)
+addRouterViews('/',Com) */

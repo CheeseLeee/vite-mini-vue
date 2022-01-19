@@ -15,9 +15,6 @@ import {
  
 } from './component'
 
-
-
-
 export function createApp(rootComponent, rootComponentProps) {
     console.log('create')
     let proxy = processComponent(rootComponent, rootComponentProps, 'root')
