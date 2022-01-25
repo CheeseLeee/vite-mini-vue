@@ -1,6 +1,5 @@
 import { h } from "../../runningtime/h"
-import Menu from '../../../src/views/Menu'
-import { ref } from "../../reactive/reactive"
+import { ref } from "../../reactive/ref"
 let routerViews = new Map()
 export function addRouterViews(path,com){
     routerViews.set(path,com)

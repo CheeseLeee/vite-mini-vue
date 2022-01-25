@@ -1,4 +1,4 @@
-import { effect } from "../reactive/reactive"
+import { effect } from "../reactive/effect"
 import { RouterView } from "../router/component/RouterView"
 import {
     isObject

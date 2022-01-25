@@ -3,8 +3,7 @@ import {
 } from '../untils/untils'
 import {
     effect,
-    ref
-} from '../reactive/reactive'
+} from '../reactive/effect'
 import {
     mount,
     patch,

@@ -1,2 +1,5 @@
 export {onMounted} from './runningtime/component'
 export {nextTick} from './runningtime/nextTick'
+export {ref} from './reactive/ref'
+export {reactive} from './reactive/reactive'
+export {computed} from './reactive/computed'

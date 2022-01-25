@@ -1,5 +1,5 @@
 import { h } from '../../packages/runningtime/h'
-import { ref, reactive, computed } from '../../packages/reactive/reactive' 
+import { ref, computed } from '../../packages/hooks' 
 export default {    
     setup(){
         const num = ref(0)
