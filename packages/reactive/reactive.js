@@ -4,8 +4,7 @@ export function effect(eff, option = {}) {
     if (option.lazy) {
         eff.scheduler = option.scheduler
         option.scheduler()
-        activeEffect = option.scheduler
-
+       
     }
     activeEffect = eff
     activeEffect()
@@ -107,18 +106,17 @@ class ReactiveComputed {
         this.getter = getter
         this.effect = effect(getter, {
             lazy: true,
-            scheduler: () => {
-                console.log('scheduler')
+            scheduler: () => {                
                 if (!this.dirty) {
+                    console.log('scheduler')
                     this.dirty = true
                     //trigger(this,'value')                    
                 }
-
             }
         })
     }
     get value() {
-        console.log(this.dirty)
+        console.log('cc')
         if (this.dirty) {
             this._value = this.getter()
             this.dirty = false
@@ -127,6 +125,7 @@ class ReactiveComputed {
         return this._value
     }
     set value(newValue) {
-        this._value = newValue
+        //this._value = newValue
+        console.warn('computed.value is only readonly')
     }
 }

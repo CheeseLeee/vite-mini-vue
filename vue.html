@@ -11,6 +11,7 @@
 <body>
     <div id="app">
         <h1>Hello App!</h1>
+        <h2 @click="add">{{c}}</h2>
         <p>
           <!--使用 router-link 组件进行导航 -->
           <!--通过传递 `to` 来指定链接 -->
@@ -24,6 +25,7 @@
       </div>
 </body>
 <script>
+
     const Home = { template: '<div>Home</div>' }
 const About = { template: '<div>About</div>' }
 
@@ -45,7 +47,21 @@ const router = VueRouter.createRouter({
 })
 
 // 5. 创建并挂载根实例
-const app = Vue.createApp({})
+const app = Vue.createApp({
+  setup(){
+    let n1 = Vue.ref(0)
+    let n2 = Vue.ref(1)
+    let c = Vue.computed(() => {
+      return n1.value + n2.value
+    })
+    function add(){
+      c.value++
+    }
+    return {
+      n1,n2,c,add
+    }
+  }
+})
 //确保 _use_ 路由实例使
 //整个应用支持路由。
 app.use(router)

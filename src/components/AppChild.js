@@ -10,6 +10,7 @@ export default {
             num.value++
             num.value++
             num.value++
+
         }
         const c = computed(() => {
             console.log('ccc')
